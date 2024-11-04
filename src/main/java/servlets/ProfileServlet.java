@@ -15,12 +15,14 @@ import java.io.IOException;
 @WebServlet(name = "ProfileServlet", urlPatterns = "/user/profile")
 public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if(request.getSession().getAttribute("logged") == null){
+        if(request.getSession().getAttribute("id") == null){
             response.sendRedirect("/user/login");
+            return;
         }
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("alpha");
         EntityManager manager = factory.createEntityManager();
-        request.setAttribute("user",manager.find(User.class,request.getSession().getAttribute("id")));
+        User user = manager.find(User.class,request.getSession().getAttribute("id"));
+        request.setAttribute("user",user);
         manager.close();
         getServletContext().getRequestDispatcher("/profile.jsp").forward(request,response);
     }

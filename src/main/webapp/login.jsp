@@ -9,7 +9,7 @@
         <h1><strong>Login</strong></h1>
     </div>
     <div>
-        <form>
+        <form method="post" action="/user/login">
             <div>
                 <label for="username">Username</label>
                 <div>

@@ -8,10 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "BasicServlet",urlPatterns = "/**")
+@WebServlet(name = "BasicServlet",urlPatterns = {"/","","/**"})
 public class BasicServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        System.out.println("Empty");
+        response.sendRedirect("/user/login");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{

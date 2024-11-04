@@ -4,6 +4,11 @@
     <title>Edit</title>
 </head>
 <body>
+<header>
+    <form method="post" action="/user/logout">
+        <input type="submit" value="Logout">
+    </form>
+</header>
 <div>
     <div>
         <h1><strong>Edit</strong></h1>

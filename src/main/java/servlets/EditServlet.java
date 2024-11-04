@@ -24,8 +24,9 @@ import java.util.Set;
 @WebServlet(name = "EditServlet", urlPatterns = "/user/edit")
 public class EditServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if(request.getSession().getAttribute("logged") == null){
+        if(request.getSession().getAttribute("id") == null){
             response.sendRedirect("/user/login");
+            return;
         }
         getServletContext().getRequestDispatcher("/edit.jsp").forward(request,response);
     }
@@ -51,6 +52,7 @@ public class EditServlet extends HttpServlet {
                 user.setId(userer.getId());
                 user.setUsername(userer.getUsername());
                 user.setRole(userer.getRole());
+                request.getSession().setAttribute("user",user);
                 manager.persist(user);
                 manager.getTransaction().commit();
                 manager.close();

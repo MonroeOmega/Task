@@ -23,6 +23,10 @@ import java.util.Set;
 @WebServlet(name = "RegisterServlet", urlPatterns = "/user/register")
 public class RegisterServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        if (request.getSession().getAttribute("id") != null){
+            response.sendRedirect("/user/profile");
+            return;
+        }
         getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
     }
 
