@@ -6,6 +6,7 @@ import app.entity.binding.UserRegisterBindingModel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,6 +28,7 @@ public class RegisterServlet extends HttpServlet {
             response.sendRedirect("/user/profile");
             return;
         }
+        request.setAttribute("error","");
         getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
     }
 
@@ -44,23 +46,36 @@ public class RegisterServlet extends HttpServlet {
         Set<ConstraintViolation<UserRegisterBindingModel>> violations = validator.validate(registerBindingModel);
         if(violations.isEmpty()){
             if(registerBindingModel.getPassword().equals(registerBindingModel.getRepeatPassword())) {
+
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("alpha");
                 EntityManager manager = emf.createEntityManager();
                 manager.getTransaction().begin();
-                User user = modelMapper.map(registerBindingModel, User.class);
-                user.setRole(UserRoleEnum.USER);
-                manager.persist(user);
-                manager.getTransaction().commit();
-                manager.close();
-                response.sendRedirect("/user/login");
+                Query query = manager.createQuery("from User u where u.username = :username");
+                query.setParameter("username",registerBindingModel.getUsername());
+                if (query.getResultList().isEmpty()) {
+                    query = manager.createQuery("from User u where u.email = :email");
+                    query.setParameter("email",registerBindingModel.getEmail());
+                    if (query.getResultList().isEmpty()) {
+                        User user = modelMapper.map(registerBindingModel, User.class);
+                        user.setRole(UserRoleEnum.USER);
+                        manager.persist(user);
+                        manager.getTransaction().commit();
+                        manager.close();
+                        response.sendRedirect("/user/login");
+                    }else {
+                        request.setAttribute("error", "Email already in use.");
+                        getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
+                    }
+                }else {
+                    request.setAttribute("error", "Username already exists.");
+                    getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
+                }
             }else {
-                System.out.println("password");
-                request.setAttribute("pas-error", "Passwords Don't Match");
+                request.setAttribute("error", "Passwords Don't Match");
                 getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
             }
         }else{
-            System.out.println("Invalid");
-            request.setAttribute("error", "Invalid Form");
+            request.setAttribute("error", "Invalid Form Data");
             getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
         }
 

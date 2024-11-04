@@ -7,6 +7,7 @@ import app.entity.binding.UserRegisterBindingModel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -47,24 +48,30 @@ public class EditServlet extends HttpServlet {
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("alpha");
                 EntityManager manager = emf.createEntityManager();
                 manager.getTransaction().begin();
-                User userer = manager.find(User.class,request.getSession().getAttribute("id"));
-                User user = modelMapper.map(editBindingModel, User.class);
-                user.setId(userer.getId());
-                user.setUsername(userer.getUsername());
-                user.setRole(userer.getRole());
-                request.getSession().setAttribute("user",user);
-                manager.persist(user);
-                manager.getTransaction().commit();
-                manager.close();
-                response.sendRedirect("/user/profile");
+                Query query = manager.createQuery("from User u where u.email = :email");
+                query.setParameter("email",editBindingModel.getEmail());
+                if (query.getResultList().isEmpty()) {
+                    User userer = manager.find(User.class, request.getSession().getAttribute("id"));
+                    User user = modelMapper.map(editBindingModel, User.class);
+                    user.setId(userer.getId());
+                    user.setUsername(userer.getUsername());
+                    user.setRole(userer.getRole());
+                    request.getSession().setAttribute("user", user);
+                    manager.merge(user);
+                    manager.getTransaction().commit();
+                    manager.close();
+                    response.sendRedirect("/user/profile");
+                }else{
+                    request.setAttribute("error", "Email is already used");
+                    getServletContext().getRequestDispatcher("/edit.jsp").forward(request,response);
+                }
             }else {
-                System.out.println("password");
-                request.setAttribute("pas-error", "Passwords Don't Match");
+                request.setAttribute("error", "Passwords Don't Match");
                 getServletContext().getRequestDispatcher("/edit.jsp").forward(request,response);
             }
         }else{
             System.out.println("Invalid");
-            request.setAttribute("error", "Invalid Form");
+            request.setAttribute("error", "Invalid Form Data");
             getServletContext().getRequestDispatcher("/edit.jsp").forward(request,response);
         }
     }

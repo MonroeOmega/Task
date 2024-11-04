@@ -23,6 +23,7 @@ public class ProfileServlet extends HttpServlet {
         EntityManager manager = factory.createEntityManager();
         User user = manager.find(User.class,request.getSession().getAttribute("id"));
         request.setAttribute("user",user);
+        request.setAttribute("username",user.getUsername());
         manager.close();
         getServletContext().getRequestDispatcher("/profile.jsp").forward(request,response);
     }

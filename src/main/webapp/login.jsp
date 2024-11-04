@@ -26,6 +26,9 @@
             </div>
             <input type="submit" value="Login">
         </form>
+        <form action="/user/register">
+            <input type="submit" value="Register">
+        </form>
     </div>
 </div>
 </body>

@@ -7,7 +7,7 @@
 <div>
     <div>
         <h1><strong>Register</strong></h1>
-        <p>${error}</p>
+        <h2><%= request.getAttribute("error")%></h2>
     </div>
     <div>
         <form method="post" action="/user/register">
@@ -16,6 +16,7 @@
                 <div>
                     <input name="username" type="text" id="username"
                            placeholder="Username">
+                    <small>Username must be 5 to 20 symbols.</small>
                 </div>
             </div>
             <div>
@@ -37,21 +38,27 @@
                 <div>
                     <input name="email" type="text" id="email"
                            placeholder="Email">
+                    <small>Email must be valid.</small>
                 </div>
+
             </div>
             <div>
                 <label for="password">Password</label>
                 <div>
                     <input name="password" type="password" id="password"
                            placeholder="Password">
+                    <small>Password must be 5 to 20 symbols.</small>
                 </div>
+
             </div>
             <div>
                 <label for="rep-password">Password</label>
                 <div>
                     <input name="rep-password" type="password" id="rep-password"
                            placeholder="Repeat Password">
+                    <small>Password must be 5 to 20 symbols.</small>
                 </div>
+
             </div>
             <input type="submit" value="Register">
         </form>

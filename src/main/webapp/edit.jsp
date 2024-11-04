@@ -14,7 +14,7 @@
         <h1><strong>Edit</strong></h1>
     </div>
     <div>
-        <form method="post" action="user/edit">
+        <form method="post" action="/user/edit">
             <div>
                 <label for="first-name">First Name</label>
                 <div>
@@ -30,17 +30,19 @@
                 </div>
             </div>
             <div>
-                <label for="email">Username</label>
+                <label for="email">Email</label>
                 <div>
                     <input name="email" type="text" id="email"
                            placeholder="Email">
+                    <small>Email must be valid.</small>
                 </div>
             </div>
             <div>
                 <label for="password">Password</label>
                 <div>
-                    <input name="rep-password" type="password" id="password"
+                    <input name="password" type="password" id="password"
                            placeholder="Password">
+                    <small>Password must be 5 to 20 symbols.</small>
                 </div>
             </div>
             <div>
@@ -48,6 +50,7 @@
                 <div>
                     <input name="rep-password" type="password" id="rep-password"
                            placeholder="Repeat Password">
+                    <small>Password must be 5 to 20 symbols.</small>
                 </div>
             </div>
             <input type="submit" value="Edit">
